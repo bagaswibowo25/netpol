@@ -1,0 +1,15 @@
+{{- range .Values.networkPolicies }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .name }}
+spec:
+{{- include "netpol.podSelector" . | indent 2 }}
+{{- if .ingress }}
+{{- include "netpol.ingress" . | indent 2 }} 
+{{- end }}
+{{- if .egress }}
+{{- include "netpol.egress" . | indent 2 }}
+{{- end }}
+---
+{{- end }}

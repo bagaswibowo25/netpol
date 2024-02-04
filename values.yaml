@@ -1,0 +1,62 @@
+networkPolicies:
+- name: "netpol-1"
+  podSelector:
+    foo: bar
+  ingress:
+    cidrs:
+      - ip: 10.0.0.1/16
+        excepts:
+        - 10.0.0.254/24
+    podSelectors:
+      - label:
+          foo: bar
+        matches:
+          - matchIn:
+              env:
+              - foo
+              - baz
+          - matchIn:
+              var:
+              - foo
+          - matchNotIn:
+              env:
+              - bar
+          - matchExists: foobar
+          - matchNotExist: foobaz
+    namespaceSelectors:
+      - label:
+          foo: bar
+        matches:
+          - matchIn:
+              env:
+              - foo
+        podSelectors:
+          - label:
+              foo: bar
+            matches:
+              - matchIn:
+                  env:
+                  - foo
+      - label: any
+        podSelectors:
+          - label:
+              foo: bar
+    ports:
+      tcp: 
+      - 8080
+      - 443
+      udp: 
+      - 53
+- name: "my-netpol-2"
+  ingress:
+    cidrs:
+      - ip: 1.1.1.1/32
+    ports:
+      tcp:
+      - 80
+  egress:
+    cidrs:
+    - ip: 8.8.8.8/32
+    ports:
+      udp:
+      - 53
